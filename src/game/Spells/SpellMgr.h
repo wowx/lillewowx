@@ -479,6 +479,19 @@ inline bool IsSpellRemovedOnEvade(SpellEntry const* spellInfo)
         case 39918:         // Soulgrinder Ritual Visual ( in progress)
         case 39920:         // Soulgrinder Ritual Visual ( beam)
         case 41634:         // Invisibility and Stealth Detection
+        case 44537:         // Fel Lightning
+        case 44604:         // Enchantment of Spell Haste
+        case 44855:         // Out of Phase
+        case 45033:         // Abyssal Transformation
+        case 45822:         // Iceblood Warmaster
+        case 45823:         // Tower Point Warmaster
+        case 45824:         // West Frostwolf Warmaster
+        case 45826:         // East Frostwolf Warmaster
+        case 45828:         // Dun Baldar North Marshal
+        case 45829:         // Dun Baldar South Marshal
+        case 45830:         // Stonehearth Marshal
+        case 45831:         // Icewing Marshal
+        case 46048:         // Fel Lightning
             return false;
         default:
             return true;
@@ -929,10 +942,6 @@ inline bool IsPositiveEffectTargetMode(const SpellEntry* entry, SpellEffectIndex
     if (!entry)
         return false;
 
-    // Forces positive targets to be negative TODO: Find out if this is true for neutral targets
-    if (entry->HasAttribute(SPELL_ATTR_AURA_IS_DEBUFF))
-        return false;
-
     // Triggered spells case: prefer child spell via IsPositiveSpell()-like scan for triggered spell
     if (IsSpellEffectTriggerSpell(entry, effIndex))
     {
@@ -1128,7 +1137,7 @@ inline bool IsPositiveEffect(const SpellEntry* spellproto, SpellEffectIndex effI
     return IsPositiveEffectTargetMode(spellproto, effIndex, caster, target);
 }
 
-inline bool IsPositiveAuraEffect(const SpellEntry* entry, SpellEffectIndex effIndex, const WorldObject* caster = nullptr, const WorldObject* target = nullptr)
+inline bool IsPositiveAuraEffect(const SpellEntry* entry, SpellEffectIndex effIndex, const WorldObject* /*caster*/ = nullptr, const WorldObject* /*target*/ = nullptr)
 {
     return IsAuraApplyEffect(entry, effIndex) && !IsEffectTargetNegative(entry->EffectImplicitTargetA[effIndex], entry->EffectImplicitTargetB[effIndex])
         && !entry->HasAttribute(SPELL_ATTR_AURA_IS_DEBUFF) && entry->Effect[effIndex] != SPELL_EFFECT_APPLY_AREA_AURA_ENEMY;
@@ -1348,7 +1357,7 @@ inline uint32 GetAffectedTargets(SpellEntry const* spellInfo)
                 case 26457:                                 // Drain Mana (correct number has to be researched)
                 case 26559:
                     return 12;
-                case 25991:                                 // Poison Bolt Volley (AQ40, Pincess Huhuran)
+                case 26052:                                 // Poison Bolt Volley (AQ40, Princess Huhuran)
                     return 15;
                 case 46771:                                 // Flame Sear (SWP, Grand Warlock Alythess)
                     return urand(3, 5);
@@ -1362,6 +1371,17 @@ inline uint32 GetAffectedTargets(SpellEntry const* spellInfo)
                 case 23603:                                 // Wild Polymorph (BWL, Nefarian)
                 case 38194:                                 // Blink
                     return 1;
+                default:
+                    break;
+            }
+            break;
+        }
+        case SPELLFAMILY_HUNTER:
+        {
+            switch (spellInfo->Id)
+            {
+                case 26180:                                 // Wyvern Sting (AQ40, Princess Huhuran)
+                    return 10;
                 default:
                     break;
             }
@@ -2664,7 +2684,7 @@ class SpellMgr
             return (spellId1 != spellId2 && GetFirstSpellInChain(spellId1) == GetFirstSpellInChain(spellId2));
         }
 
-        bool IsSingleTargetSpell(SpellEntry const* entry) const
+        inline bool IsSingleTargetSpell(SpellEntry const* entry) const
         {
             if (entry->HasAttribute(SPELL_ATTR_EX5_SINGLE_TARGET_SPELL))
                 return true;
@@ -2684,17 +2704,23 @@ class SpellMgr
                 return false;
 
             // Early instance of same spell check
-            if (entry1 == entry2)
+            if (entry1 == entry2 || entry1->Id == entry2->Id)
                 return true;
 
-            // One spell is a rank of another spell (same spell chain)
-            if (GetFirstSpellInChain(entry1->Id) == GetFirstSpellInChain(entry2->Id))
+            // One spell is a rank of another spell
+            if (IsSpellAnotherRankOfSpell(entry1->Id, entry2->Id))
                 return true;
+
+            // Experimental: Try to detect spinoffs of specific family spells (e.g. polymorph flavors)
+            if (entry1->SpellFamilyName != SPELLFAMILY_GENERIC && entry2->SpellFamilyName != SPELLFAMILY_GENERIC)
+            {
+                if (!entry1->SpellFamilyFlags.Empty() && !entry2->SpellFamilyFlags.Empty())
+                    return entry1->IsFitToFamily(SpellFamily(entry2->SpellFamilyName), entry2->SpellFamilyFlags);
+            }
 
             return false;
         }
 
-        bool IsSpellRankOfSpell(SpellEntry const* spellInfo_1, uint32 spellId_2) const;
         bool IsSpellStackableWithSpell(const SpellEntry* entry1, const SpellEntry* entry2) const
         {
             if (!entry1 || !entry2)

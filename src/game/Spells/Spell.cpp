@@ -4499,7 +4499,7 @@ SpellCastResult Spell::CheckCast(bool strict)
     if (!m_caster->isAlive() && m_caster->GetTypeId() == TYPEID_PLAYER && !m_spellInfo->HasAttribute(SPELL_ATTR_CASTABLE_WHILE_DEAD) && !m_spellInfo->HasAttribute(SPELL_ATTR_PASSIVE))
         return SPELL_FAILED_CASTER_DEAD;
 
-    if (!m_caster->IsStandState() && m_caster->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED) && !m_spellInfo->HasAttribute(SPELL_ATTR_CASTABLE_WHILE_SITTING))
+    if (!m_IsTriggeredSpell && !m_caster->IsStandState() && m_caster->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED) && !m_spellInfo->HasAttribute(SPELL_ATTR_CASTABLE_WHILE_SITTING))
         return SPELL_FAILED_NOT_STANDING;
 
     // check global cooldown
@@ -4734,7 +4734,7 @@ SpellCastResult Spell::CheckCast(bool strict)
             for (uint32 i = 0; i < MAX_EFFECT_INDEX; ++i)
             {
                 uint32 targetType = m_spellInfo->EffectImplicitTargetA[i];
-                if (targetType == TARGET_UNIT_CASTER) // fits the description but should never be checked
+                if (targetType == TARGET_UNIT_CASTER || targetType == TARGET_UNIT_CASTER_PET) // fits the description but should never be checked
                     continue;
                 auto& data = SpellTargetInfoTable[targetType];
                 if (data.type == TARGET_TYPE_UNIT && (data.enumerator == TARGET_ENUMERATOR_SINGLE || data.enumerator == TARGET_ENUMERATOR_CHAIN))
@@ -6594,7 +6594,7 @@ CurrentSpellTypes Spell::GetCurrentContainer() const
     return (CURRENT_GENERIC_SPELL);
 }
 
-bool Spell::CheckTargetGOScript(GameObject* target, SpellEffectIndex eff) const
+bool Spell::CheckTargetGOScript(GameObject* target, SpellEffectIndex /*eff*/) const
 {
     switch (m_spellInfo->Id)
     {
@@ -7425,7 +7425,6 @@ void Spell::GetSpellRangeAndRadius(SpellEffectIndex effIndex, float& radius, boo
         }
     }
 
-
     if (Unit* realCaster = GetAffectiveCaster())
     {
         if (Player* modOwner = realCaster->GetSpellModOwner())
@@ -7452,6 +7451,15 @@ void Spell::GetSpellRangeAndRadius(SpellEffectIndex effIndex, float& radius, boo
                         radius = 0.5f * (60000 - auraHolder->GetAuraDuration()) * 0.001f;
                     break;
                 }
+                case 43486:                                 // Summon Amani'shi Warriors
+                case 43487:                                 // Summon Amani Eagle
+                case 43962:                                 // Summon Amani'shi Hatcher
+                case 45340:
+                {
+                    if (!targetB)
+                        radius = 250.f;
+                    break;
+                }
                 default:
                     break;
             }
@@ -7474,6 +7482,16 @@ void Spell::FilterTargetMap(UnitList& filterUnitList, SpellEffectIndex effIndex)
 {
     switch (m_spellInfo->Id)
     {
+        case 26052: // Poison Bolt Volley (spell hits only the 15 closest targets)
+        case 26180: // Wyvern Sting (spell hits only the 10 closest targets)
+        {
+            if (filterUnitList.size() > m_affectedTargetCount)
+            {
+                filterUnitList.sort(TargetDistanceOrderNear(m_caster));
+                filterUnitList.resize(m_affectedTargetCount);
+            }
+            return;
+        }
         case 30284: // Change Facing - Chess event - QOL to pick deterministically closest target
         case 37144: // Move - Chess event - same QOL change
         case 37146:
@@ -7515,10 +7533,10 @@ void Spell::FilterTargetMap(UnitList& filterUnitList, SpellEffectIndex effIndex)
         }
         case 42005: // Bloodboil (spell hits only the 5 furthest away targets)
         {
-            if (filterUnitList.size() > 5)
+            if (filterUnitList.size() > m_affectedTargetCount)
             {
                 filterUnitList.sort(TargetDistanceOrderFarAway(m_caster));
-                filterUnitList.resize(5);
+                filterUnitList.resize(m_affectedTargetCount);
             }
             return;
         }
@@ -7579,7 +7597,7 @@ void Spell::OnSuccessfulSpellFinish()
     }
 }
 
-SpellCastResult Spell::OnCheckCast(bool strict)
+SpellCastResult Spell::OnCheckCast(bool /*strict*/)
 {
     switch (m_spellInfo->Id)
     {

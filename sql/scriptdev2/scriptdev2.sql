@@ -437,7 +437,12 @@ UPDATE creature_template SET ScriptName='npc_tyrande_whisperwind' WHERE entry=17
 UPDATE creature_template SET ScriptName='npc_thrall' WHERE entry=17852;
 UPDATE creature_template SET ScriptName='npc_jaina_proudmoore' WHERE entry=17772;
 UPDATE creature_template SET ScriptName='boss_archimonde' WHERE entry=17968;
-UPDATE creature_template SET ScriptName='npc_doomfire_spirit' WHERE entry=18104;
+UPDATE creature_template SET ScriptName='npc_doomfire_targeting' WHERE entry=18104;
+UPDATE creature_template SET ScriptName='boss_azgalor' WHERE entry IN(17842);
+UPDATE creature_template SET ScriptName='boss_kazrogal' WHERE entry IN(17888);
+UPDATE creature_template SET ScriptName='boss_anetheron' WHERE entry IN(17808);
+UPDATE creature_template SET ScriptName='boss_rage_winterchill' WHERE entry IN(17767);
+UPDATE creature_template SET ScriptName='npc_building_trigger' WHERE entry=18304;
 
 /* OLD HILLSBRAD */
 UPDATE instance_template SET ScriptName='instance_old_hillsbrad' WHERE map=560;
@@ -647,6 +652,8 @@ UPDATE creature_template SET ScriptName='mob_fel_orc_convert' WHERE entry=17083;
 UPDATE creature_template SET ScriptName='mob_omrogg_heads' WHERE entry IN (19523,19524);
 UPDATE creature_template SET ScriptName='boss_warchief_kargath_bladefist' WHERE entry=16808;
 UPDATE creature_template SET ScriptName='npc_blade_dance_target' WHERE entry IN(20709);
+UPDATE creature_template SET ScriptName='npc_gauntlet_of_fire' WHERE entry=17692;
+UPDATE creature_template SET ScriptName='npc_shattered_hand_scout' WHERE entry=17693;
 UPDATE instance_template SET ScriptName='instance_shattered_halls' WHERE map=540;
 
 /* MAGTHERIDON'S LAIR */
@@ -2901,7 +2908,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1269022,'Champions, my shield grows weak!',10437,1,0,0,'medivh SAY_WEAK75'),
 (-1269023,'My powers must be concentrated on the portal! I do not have time to hold the shield!',10438,1,0,0,'medivh SAY_WEAK50'),
 (-1269024,'The shield is nearly gone! All that I have worked for is in danger!',10439,1,0,0,'medivh SAY_WEAK25'),
-(-1269025,'No... damn this feeble mortal coil...',10441,1,0,0,'medivh SAY_DEATH'),
+(-1269025,'No! Damn this feeble, mortal coil!',10441,1,0,0,'medivh SAY_DEATH'),
 (-1269026,'I am grateful for your aid, champions. Now, Gul\'dan\'s Horde will sweep across this world, like a locust swarm, and all my designs, all my carefully laid plans will at last fall into place.',10440,1,0,0,'medivh SAY_WIN'),
 (-1269027,'Orcs of the Horde! This portalis the gateway to your new destiny! Azeroth lies before you, ripe for the taking!',0,1,0,0,'medivh SAY_ORCS_ENTER'),
 (-1269028,'Gul\'dan speaks the truth! We should return at once to tell our brothers of the news! Retreat back trought the portal!',0,1,0,0,'medivh SAY_ORCS_ANSWER');
@@ -3155,13 +3162,13 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1531011,'%s is weakened!',0,2,0,0,'cthun EMOTE_WEAKENED'),
 
-(-1531012,'The massive floating eyeball in the center of the chamber turns its gaze upon you. You stand before a god.',0,2,0,0,'eye cthun EMOTE_INTRO'),
-(-1531013,'Only flesh and bone. Mortals are such easy prey...',0,1,0,0,'veklor SAY_INTRO_1'),
-(-1531014,'Where are your manners, brother. Let us properly welcome our guests.',0,1,0,0,'veknilash SAY_INTRO_2'),
+(-1531012,'The massive floating eyeball in the center of the chamber turns its gaze upon you. You stand before a god.',0,7,0,0,'eye cthun EMOTE_INTRO'),
+(-1531013,'Only flesh and bone. Mortals are such easy prey...',0,1,0,1,'veklor SAY_INTRO_1'),
+(-1531014,'Where are your manners, brother. Let us properly welcome our guests.',0,1,0,5,'veknilash SAY_INTRO_2'),
 (-1531015,'There will be pain...',0,1,0,0,'veklor SAY_INTRO_3'),
-(-1531016,'Oh so much pain...',0,1,0,0,'veknilash SAY_INTRO_4'),
-(-1531017,'Come, little ones.',0,1,0,0,'veklor SAY_INTRO_5'),
-(-1531018,'The feast of souls begins now...',0,1,0,0,'veknilash SAY_INTRO_6'),
+(-1531016,'Oh so much pain...',0,1,0,5,'veknilash SAY_INTRO_4'),
+(-1531017,'Come, little ones.',0,1,0,15,'veklor SAY_INTRO_5'),
+(-1531018,'The feast of souls begins now...',0,1,0,15,'veknilash SAY_INTRO_6'),
 
 (-1531019,'It\'s too late to turn away.',8623,1,0,0,'veklor SAY_AGGRO_1'),
 (-1531020,'Prepare to embrace oblivion!',8626,1,0,0,'veklor SAY_AGGRO_2'),
@@ -3548,39 +3555,76 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 -- -1 534 000 THE BATTLE OF MT. HYJAL
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
-(-1534000,'I\'m in jeopardy, help me if you can!',11007,1,0,0,'jaina hyjal ATTACKED 1'),
-(-1534001,'They\'ve broken through!',11049,1,0,0,'jaina hyjal ATTACKED 2'),
-(-1534002,'Stay alert! Another wave approaches.',11008,1,0,0,'jaina hyjal INCOMING'),
-(-1534003,'Don\'t give up! We must prevail!',11006,1,0,0,'jaina hyjal BEGIN'),
-(-1534004,'Hold them back as long as possible.',11050,1,0,0,'jaina hyjal RALLY 1'),
-(-1534005,'We must hold strong!',11051,1,0,0,'jaina hyjal RALLY 2'),
-(-1534006,'We are lost. Fall back!',11009,1,0,0,'jaina hyjal FAILURE'),
-(-1534007,'We have won valuable time. Now we must pull back!',11011,1,0,0,'jaina hyjal SUCCESS'),
-(-1534008,'I did... my best.',11010,1,0,0,'jaina hyjal DEATH'),
+(-1534000,'I\'m in jeopardy! Help me if you can!',11007,6,0,0,'jaina hyjal ATTACKED 1'),
+(-1534001,'They\'ve broken through!',11049,6,0,0,'jaina hyjal ATTACKED 2'),
+-- (-1534002,'Stay alert! Another wave approaches.',11008,6,0,0,'jaina hyjal INCOMING'), -- Text based on sound file (Unknown if this was ever really used)
+(-1534003,'Don\'t give up! We must prevail!',11006,6,0,0,'jaina hyjal RALLY 1'),
+(-1534004,'Hold them back as long as possible!',11050,6,0,0,'jaina hyjal RALLY 2'),
+(-1534005,'We must hold strong!',11051,6,0,0,'jaina hyjal RALLY 3'),
+(-1534006,'We are lost! Fall back!',11009,6,0,0,'jaina hyjal RETREAT'),
+(-1534007,'We have won valuable time. Now we must pull back.',11011,6,0,0,'jaina hyjal WIN'),
+(-1534008,'I did... my best.',11010,6,0,0,'jaina hyjal DEATH'),
 
-(-1534009,'I will lie down for no one!',11031,1,0,0,'thrall hyjal ATTACKED 1'),
-(-1534010,'Bring the fight to me and pay with your lives!',11061,1,0,0,'thrall hyjal ATTACKED 2'),
-(-1534011,'Make ready for another wave! LOK-TAR OGAR!',11032,1,0,0,'thrall hyjal INCOMING'),
-(-1534012,'Hold them back! Do not falter!',11030,1,0,0,'thrall hyjal BEGIN'),
-(-1534013,'Victory or death!',11059,1,0,0,'thrall hyjal RALLY 1'),
-(-1534014,'Do not give an inch of ground!',11060,1,0,0,'thrall hyjal RALLY 2'),
-(-1534015,'It is over. Withdraw! We have failed.',11033,1,0,0,'thrall hyjal FAILURE'),
-(-1534016,'We have played our part and done well. It is up to the others now.',11035,1,0,0,'thrall hyjal SUCCESS'),
-(-1534017,'Uraaa...',11034,1,0,0,'thrall hyjal DEATH'),
+(-1534009,'I will lay down for no one!',11031,6,0,0,'thrall hyjal ATTACKED 1'),
+(-1534010,'Bring the fight to me and pay with your lives!',11061,6,0,0,'thrall hyjal ATTACKED 2'),
+-- (-1534011,'Make ready for another wave! LOK-TAR OGAR!',11032,6,0,0,'thrall hyjal INCOMING'), -- Text based on sound file (Unknown if this was ever really used)
+(-1534012,'Hold them back! Do not falter!',11030,6,0,0,'thrall hyjal RALLY 1'), -- (Broadcast ID 18731, unseen ingame)
+(-1534013,'Victory or death!',11059,6,0,0,'thrall hyjal RALLY 2'), -- (Broadcast ID 18732, unseen ingame)
+(-1534014,'Do not give an inch of ground!',11060,6,0,0,'thrall hyjal RALLY 3'), -- (Broadcast ID 18733, unseen ingame)
+(-1534015,'It is over! Withdraw! We have failed....',11033,6,0,0,'thrall hyjal RETREAT'),
+(-1534016,'We have played our part, and done well at that. It is up to the others now.',11035,6,0,0,'thrall hyjal WIN'), -- (Broadcast ID 15312, unseen ingame)
+-- (-1534017,'Uraaa...',11034,6,0,0,'thrall hyjal DEATH'), -- Text based on sound file (Most likely only sound should be used)
 
-(-1534018,'All of your efforts have been in vain, for the draining of the World Tree has already begun. Soon the heart of your world will beat no more.',10986,6,0,0,'archimonde SAY_PRE_EVENTS_COMPLETE'),
-(-1534019,'Your resistance is insignificant.',10987,1,0,0,'archimonde SAY_AGGRO'),
-(-1534020,'This world will burn!',10990,1,0,0,'archimonde SAY_DOOMFIRE1'),
-(-1534021,'Manach sheek-thrish!',11041,1,0,0,'archimonde SAY_DOOMFIRE2'),
-(-1534022,'A-kreesh!',10989,1,0,0,'archimonde SAY_AIR_BURST1'),
-(-1534023,'Away vermin!',11043,1,0,0,'archimonde SAY_AIR_BURST2'),
-(-1534024,'All creation will be devoured!',11044,1,0,0,'archimonde SAY_SLAY1'),
-(-1534025,'Your soul will languish for eternity.',10991,1,0,0,'archimonde SAY_SLAY2'),
-(-1534026,'I am the coming of the end!',11045,1,0,0,'archimonde SAY_SLAY3'),
-(-1534027,'At last it is here! Mourn and lament the passing of all you have ever known, and all that would have been! Hach min corai!',10993,1,0,0,'archimonde SAY_ENRAGE'),
-(-1534028,'No, it cannot be! Nooo!',10992,1,0,0,'archimonde SAY_DEATH'),
-(-1534029,'You are mine now.',10988,1,0,0,'archimonde SAY_SOUL_CHARGE1'),
-(-1534030,'Bow to my will.',11042,1,0,0,'archimonde SAY_SOUL_CHARGE2');
+(-1534018,'All of your efforts have been in vain, for the draining of the World Tree has already begun!  Soon the heart of your world will beat no more!',10986,6,0,0,'archimonde SAY_PRE_EVENTS_COMPLETE'),
+(-1534019,'Your resistance is insignificant.',10987,6,0,0,'archimonde SAY_AGGRO'),
+(-1534020,'This world will burn!',10990,6,0,0,'archimonde SAY_DOOMFIRE1'),
+(-1534021,'Manach sheek-thrish!',11041,6,0,0,'archimonde SAY_DOOMFIRE2'),
+(-1534022,'A-kreesh!',10989,6,0,0,'archimonde SAY_AIR_BURST1'),
+(-1534023,'Away vermin!',11043,6,0,0,'archimonde SAY_AIR_BURST2'),
+(-1534024,'All creation will be devoured!',11044,6,0,0,'archimonde SAY_SLAY1'),
+(-1534025,'Your soul will languish for eternity.',10991,6,0,0,'archimonde SAY_SLAY2'),
+(-1534026,'I am the coming of the end!',11045,6,0,0,'archimonde SAY_SLAY3'),
+(-1534027,'At last it is here. Mourn and lament the passing of all you have ever known and all that would have been! Akmin-kurai!',10993,6,0,0,'archimonde SAY_ENRAGE'),
+(-1534028,'No, it cannot be! Nooo!',10992,6,0,0,'archimonde SAY_DEATH'),
+(-1534029,'You are mine now.',10988,6,0,0,'archimonde SAY_SOUL_CHARGE1'),
+(-1534030,'Bow to my will.',11042,6,0,0,'archimonde SAY_SOUL_CHARGE2'),
+
+('-1534040', 'The Legion''s final conquest has begun! Once again the subjugation of this world is within our grasp. Let none survive!', '11022', '6', '0', '0', 'RAGE_WINTERCHILL_ENTER'),
+('-1534041', 'Succumb to the icy chill... of death.', '11024', '6', '0', '0', 'RAGE_WINTERCHILL_FROST_NOVA1'),
+('-1534042', 'It will be much colder in your grave.', '11058', '6', '0', '0', 'RAGE_WINTERCHILL_FROST_NOVA2'),
+('-1534043', 'Crumble and rot!', '11023', '6', '0', '0', 'RAGE_WINTERCHILL_DND1'),
+('-1534044', 'Ashes to ashes, dust to dust!', '11055', '6', '0', '0', 'RAGE_WINTERCHILL_DND2'),
+('-1534045', 'All life must perish!', '11025', '6', '0', '0', 'RAGE_WINTERCHILL_KILL1'),
+('-1534046', 'Victory to the Legion!', '11057', '6', '0', '0', 'RAGE_WINTERCHILL_KILL2'),
+('-1534047', 'Your world is ours now.', '11056', '6', '0', '0', 'RAGE_WINTERCHILL_KILL3'),
+('-1534048', 'You have won this battle, but not... the... war.', '11026', '6', '0', '0', 'RAGE_WINTERCHILL_DEATH'),
+
+('-1534049', 'You are defenders of a doomed world! Flee here, and perhaps you will prolong your pathetic lives!', '10977', '6', '0', '0', 'ANETHERON_ENTER'),
+('-1534050', 'Your hopes are lost!', '10981', '6', '0', '0', 'ANETHERON_KILL1'),
+('-1534051', 'Scream for me!', '11038', '6', '0', '0', 'ANETHERON_KILL2'),
+('-1534052', 'Pity, no time for a slow death!', '11039', '6', '0', '0', 'ANETHERON_KILL3'),
+('-1534053', 'The clock... is still... ticking.', '10982', '6', '0', '0', 'ANETHERON_DEATH'),
+('-1534054', 'The swarm is eager to feed.', '10979', '6', '0', '0', 'ANETHERON_CARRION_SWARM1'),
+('-1534055', 'Pestilence upon you!', '11037', '6', '0', '0', 'ANETHERON_CARRION_SWARM2'),
+('-1534056', 'You look tired....', '10978', '6', '0', '0', 'ANETHERON_SLEEP1'),
+('-1534057', 'Sweet dreams.', '11545', '6', '0', '0', 'ANETHERON_SLEEP2'),
+('-1534058', 'Let fire rain from above!', '10980', '6', '0', '0', 'ANETHERON_INFERNO1'),
+('-1534059', 'Earth and sky shall burn!', '11036', '6', '0', '0', 'ANETHERON_INFERNO2'),
+
+('-1534060', 'Cry for mercy! Your meaningless lives will soon be forfeit!', '11015', '6', '0', '0', 'KAZROGAL_ENTER'),
+('-1534061', 'Your death will be a painful one.', '11016', '6', '0', '0', 'KAZROGAL_MARK_OF_KAZROGAL1'),
+('-1534062', 'You... are marked.', '11052', '6', '0', '0', 'KAZROGAL_MARK_OF_KAZROGAL2'),
+('-1534063', 'You... are nothing!', '11053', '6', '0', '0', 'KAZROGAL_KILL1'),
+('-1534064', 'Miserable nuisance!', '11054', '6', '0', '0', 'KAZROGAL_KILL2'),
+('-1534065', 'Shaza-Kiel!', '11017', '6', '0', '0', 'KAZROGAL_KILL3'),
+
+('-1534067', 'Abandon all hope! The Legion has returned to finish what was begun so many years ago. This time, there will be no escape!', '10999', '6', '0', '0', 'AZGALOR_ENTER'),
+('-1534068', 'Reesh, hokta!', '11001', '6', '0', '0', 'AZGALOR_KILL1'),
+('-1534069', 'Don\'t fight it.', '11047', '6', '0', '0', 'AZGALOR_KILL2'),
+('-1534070', 'No one is going to save you.', '11048', '6', '0', '0', 'AZGALOR_KILL3'),
+('-1534071', 'Just a taste... of what awaits you.', '11046', '6', '0', '0', 'AZGALOR_DOOM1'),
+('-1534072', 'Suffer you despicable insect!', '11000', '6', '0', '0', 'AZGALOR_DOOM2'),
+('-1534073', 'Your time is almost... up.', '11002', '6', '0', '0', 'AZGALOR_DEATH');
 
 -- -1 540 000 SHATTERED HALLS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -3637,7 +3681,13 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1540048,'Cowards! You\'ll never pull me into the shadows!',0,1,0,0,'kargath SAY_EVADE'),
 
 (-1540049,'The Alliance dares to intrude this far into my fortress? Bring out the Honor Hold prisoners and call for the executioner! They\'ll pay with their lives for this trespass!',0,6,0,0,'kargath SAY_EXECUTE_ALLY'),
-(-1540050,'It looks like we have a ranking officer among our captives...how amusing. Execute the green-skinned dog at once!',0,6,0,0,'kargath SAY_EXECUTE_HORDE');
+(-1540050,'It looks like we have a ranking officer among our captives...how amusing. Execute the green-skinned dog at once!',0,6,0,0,'kargath SAY_EXECUTE_HORDE'),
+
+(-1540051,'Invaders have breached the defenses!',10285,6,0,0,'Gauntlet of fire yell 1'),
+(-1540052,'Archers, form ranks! On my mark!',10156,6,0,0,'Gauntlet of fire yell 2'),
+(-1540053,'Ready!',10157,6,0,0,'Gauntlet of fire yell 3'),
+(-1540054,'Aim!',10158,6,0,0,'Gauntlet of fire yell 4'),
+(-1540055,'Fire!',10159,6,0,0,'Gauntlet of fire yell 5');
 
 -- -1 542 000 BLOOD FURNACE
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -4219,7 +4269,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1564138,'My patience has ran out! Die! Die!',11458,1,0,0,'SAY_UNK'),
 
 (-1564010,'Supremus acquires a new target!',0,3,0,0,'supremus EMOTE_NEW_TARGET'), -- note: intentionally literal
-(-1564011,'Supremus punches the ground in anger!',0,3,53,0,'supremus EMOTE_PUNCH_GROUND'), -- note: intentionally literal
+(-1564011,'Supremus punches the ground in anger!',0,3,0,53,'supremus EMOTE_PUNCH_GROUND'), -- note: intentionally literal
 (-1564012,'The ground begins to crack open!',0,3,0,0,'supremus EMOTE_GROUND_CRACK'),
 
 (-1564013,'No! Not yet...',11386,1,0,0,'akama shade SAY_LOW_HEALTH'),

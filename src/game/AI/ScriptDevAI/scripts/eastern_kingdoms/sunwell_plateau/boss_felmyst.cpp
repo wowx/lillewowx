@@ -117,16 +117,16 @@ struct boss_felmystAI : public ScriptedAI
     void Reset() override
     {
         // Transform into Felmyst dragon
-        DoCastSpellIfCan(m_creature, SPELL_FELBLAZE_VISUAL);
+        DoCastSpellIfCan(m_creature, SPELL_FELBLAZE_VISUAL, CAST_TRIGGERED);
 
         m_uiPhase               = PHASE_GROUND;
         m_uiBerserkTimer        = 10 * MINUTE * IN_MILLISECONDS;
 
         // Ground Phase
         m_uiCorrosionTimer      = 30000;
-        m_uiCleaveTimer         = urand(2000, 5000);
-        m_uiGasNovaTimer        = 17000;
-        m_uiEncapsulateTimer    = urand(30000, 40000);
+        m_uiCleaveTimer         = urand(3000, 5000);
+        m_uiGasNovaTimer        = 25000;
+        m_uiEncapsulateTimer    = urand(39000, 40000);
         m_uiFlyPhaseTimer       = 60000;        // flight phase after 1 min
 
         // Air phase
@@ -175,6 +175,7 @@ struct boss_felmystAI : public ScriptedAI
         m_creature->SetLootRecipient(nullptr);
 
         Reset();
+        // ScriptedAI::EnterEvadeMode();
     }
 
     void Aggro(Unit* pWho) override
@@ -331,7 +332,7 @@ struct boss_felmystAI : public ScriptedAI
                 if (m_uiCleaveTimer < uiDiff)
                 {
                     if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE) == CAST_OK)
-                        m_uiCleaveTimer = urand(2000, 5000);
+                        m_uiCleaveTimer = urand(3000, 5000);
                 }
                 else
                     m_uiCleaveTimer -= uiDiff;
@@ -350,7 +351,7 @@ struct boss_felmystAI : public ScriptedAI
                 if (m_uiGasNovaTimer < uiDiff)
                 {
                     if (DoCastSpellIfCan(m_creature, SPELL_GAS_NOVA) == CAST_OK)
-                        m_uiGasNovaTimer = 23000;
+                        m_uiGasNovaTimer = 55000;
                 }
                 else
                     m_uiGasNovaTimer -= uiDiff;
@@ -360,7 +361,7 @@ struct boss_felmystAI : public ScriptedAI
                     if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, nullptr, SELECT_FLAG_PLAYER))
                     {
                         if (DoCastSpellIfCan(pTarget, SPELL_ENCAPSULATE_CHANNEL) == CAST_OK)
-                            m_uiEncapsulateTimer = urand(30000, 40000);
+                            m_uiEncapsulateTimer = urand(39000, 40000);
                     }
                 }
                 else

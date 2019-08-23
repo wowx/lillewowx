@@ -135,7 +135,7 @@ struct boss_alarAI : public ScriptedAI
         m_canMelee = false;
         m_rangeCheckTimer     = -1;
         m_uiFuturePlatformId    = 0;
-        m_uiPlatformMoveTimer   = 30000;
+        m_uiPlatformMoveTimer   = 300000;
         m_uiFlameQuillsTimer    = 180000;                   // after the 5th platform
 
         m_uiBerserkTimer        = 10 * MINUTE * IN_MILLISECONDS; // only after phase 2 starts
@@ -205,7 +205,7 @@ struct boss_alarAI : public ScriptedAI
         }
     }
     
-    // UNCOMMENT THIS AREA WHEN PATCH 2.1 HITS
+    // UNCOMMENT THIS AREA WHEN PATCH 2.1 HITS - should be done through serverside 41910
     /* void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         // drain 2% of boss health when the ember dies
@@ -254,7 +254,7 @@ struct boss_alarAI : public ScriptedAI
             m_uiFuturePlatformId = (m_uiFuturePlatformId + 1) % MAX_PLATFORMS;
 
         m_canMelee = false;
-        m_uiPlatformMoveTimer = 30000;
+        m_uiPlatformMoveTimer = 300000;
     }
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
@@ -297,7 +297,7 @@ struct boss_alarAI : public ScriptedAI
         }
     }
 
-    void JustPreventedDeath(Unit* attacker) override
+    void JustPreventedDeath(Unit* /*attacker*/) override
     {
         // Only init fake in phase one
         if (m_uiPhase != PHASE_ONE || !m_canMelee)

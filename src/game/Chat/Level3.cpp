@@ -375,6 +375,14 @@ bool ChatHandler::HandleReloadConfigCommand(char* /*args*/)
     return true;
 }
 
+bool ChatHandler::HandleReloadItemTemplateCommand(char *)
+{
+    sLog.outString("Re-Loading Item Data... (`item_template`)");
+    sObjectMgr.LoadItemPrototypes();
+    SendGlobalSysMessage("DB table `item_template` reloaded.");
+    return true;
+}
+
 bool ChatHandler::HandleReloadAreaTriggerTavernCommand(char* /*args*/)
 {
     sLog.outString("Re-Loading Tavern Area Triggers...");
@@ -1357,7 +1365,7 @@ bool ChatHandler::HandleUnLearnCommand(char* args)
     return true;
 }
 
-bool ChatHandler::HandleCooldownListCommand(char* args)
+bool ChatHandler::HandleCooldownListCommand(char* /*args*/)
 {
     Unit* target = getSelectedUnit();
     if (!target)
@@ -3569,7 +3577,7 @@ bool ChatHandler::HandleGetDistanceCommand(char* args)
     return true;
 }
 
-bool ChatHandler::HandleGetLosCommand(char* args)
+bool ChatHandler::HandleGetLosCommand(char* /*args*/)
 {
     Player* player = m_session->GetPlayer();
     Unit* target = getSelectedUnit();
@@ -5967,7 +5975,7 @@ bool ChatHandler::HandleMovegensCommand(char* /*args*/)
     return true;
 }
 
-bool ChatHandler::HandleMovespeedShowCommand(char* args)
+bool ChatHandler::HandleMovespeedShowCommand(char* /*args*/)
 {
     Unit* unit = getSelectedUnit();
     if (!unit)
@@ -6820,7 +6828,7 @@ bool ChatHandler::HandleArenaSeasonRewardsCommand(char* args)
     return true;
 }
 
-bool ChatHandler::HandleArenaDataReset(char* args)
+bool ChatHandler::HandleArenaDataReset(char* /*args*/)
 {
     PSendSysMessage("Resetting all arena data.");
     sBattleGroundMgr.ResetAllArenaData();
@@ -7008,7 +7016,7 @@ bool ChatHandler::HandleMmapTestHeight(char* args)
     return true;
 }
 
-bool ChatHandler::HandleServerResetAllRaidCommand(char* args)
+bool ChatHandler::HandleServerResetAllRaidCommand(char* /*args*/)
 {
     PSendSysMessage("Global raid instances reset, all players in raid instances will be teleported to homebind!");
     sMapPersistentStateMgr.GetScheduler().ResetAllRaid();

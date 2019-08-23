@@ -1554,7 +1554,7 @@ class Unit : public WorldObject
         bool IsFogOfWarVisibleHealth(Unit const* other) const;
         bool IsFogOfWarVisibleStats(Unit const* other) const;
 
-        bool IsInGroup(Unit const* other, bool party = false, bool ignoreCharms = false) const;
+        virtual bool IsInGroup(Unit const* other, bool party = false, bool ignoreCharms = false) const;
         inline bool IsInParty(Unit const* other, bool ignoreCharms = false) const { return IsInGroup(other, true, ignoreCharms); }
         bool IsInGuild(Unit const* other, bool ignoreCharms = false) const;
         bool IsInTeam(Unit const* other, bool ignoreCharms = true) const;
@@ -2292,12 +2292,12 @@ class Unit : public WorldObject
         SpellAuraProcResult HandleRemoveByDamageChanceProc(ProcExecutionData& data);
         SpellAuraProcResult HandleInvisibilityAuraProc(ProcExecutionData& data);
         SpellAuraProcResult HandlePeriodicAuraProc(ProcExecutionData& data);
-        SpellAuraProcResult HandleNULLProc(ProcExecutionData& data)
+        SpellAuraProcResult HandleNULLProc(ProcExecutionData& /*data*/)
         {
             // no proc handler for this aura type
             return SPELL_AURA_PROC_OK;
         }
-        SpellAuraProcResult HandleCantTrigger(ProcExecutionData& data)
+        SpellAuraProcResult HandleCantTrigger(ProcExecutionData& /*data*/)
         {
             // this aura type can't proc
             return SPELL_AURA_PROC_CANT_TRIGGER;
