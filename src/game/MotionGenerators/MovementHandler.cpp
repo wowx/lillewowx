@@ -573,7 +573,7 @@ void WorldSession::HandleMoverRelocation(const MovementInfoPtr& movementInfo)
         }
 
         plMover->m_movementInfo = movementInfo;
-        plMover->SetPosition(movementInfo.GetPos()->x, movementInfo.GetPos()->y, movementInfo.GetPos()->z, movementInfo.GetPos()->o);
+        plMover->SetPosition(movementInfo->GetPos()->x, movementInfo->GetPos()->y, movementInfo->GetPos()->z, movementInfo->GetPos()->o);
 
         if (movementInfo->GetPos()->z < -500.0f)
         {
